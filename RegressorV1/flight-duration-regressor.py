@@ -10,7 +10,7 @@ import joblib
 import matplotlib.pyplot as plt
 
 # Load dataset
-dataset = pd.read_csv(fr'C:\Users\Miguel Cerna\OneDrive\Desktop\-Predict-Drone-Battery-Life-Based-on-Flight-Conditions\Simulator\simulated_military_drones.csv')
+dataset = pd.read_csv(fr'C:\Users\Miguel Cerna\OneDrive\Desktop\-Predict-Drone-Battery-Life-Based-on-Flight-Conditions\SimulatorV1\simulated_military_drones.csv')
 
 # Define feature indexes
 categorical_features = [0, 6]   # e.g., 'drone_type', 'mission'
