@@ -1,7 +1,7 @@
 
 
 import OperationData from '../Components/OperationaData';
-import '/Users/miguelcerna/Desktop/-Predict-Drone-Battery-Life-Based-on-Flight-Conditions/FRONTEND/drone-sim-frontend/src/Pages/liveDataPage.css'
+import 'C:\\Users\\Miguel Cerna\\OneDrive\\Desktop\\-Predict-Drone-Battery-Life-Based-on-Flight-Conditions\\FRONTEND\\drone-sim-frontend\\src\\Pages\\liveDataPage.css'
 
 function LiveDataPage() {
   return (

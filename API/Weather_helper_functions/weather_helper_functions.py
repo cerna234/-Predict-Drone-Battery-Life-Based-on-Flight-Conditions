@@ -40,7 +40,6 @@ def live_weather_data_helper(location,date):
       
         #url = f'http://api.weatherapi.com/v1/current.json?key={api_key}&q={location}&aqi=no'
 
-        location = "Moreno Valley"
         future_weather_data_url = fr"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={location}&days=5&aqi=no&alerts=no"
         response = requests.get(future_weather_data_url)
 
