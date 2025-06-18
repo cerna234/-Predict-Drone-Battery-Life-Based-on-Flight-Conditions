@@ -1,11 +1,12 @@
 
-import OperationData from './Components/OperationaData';
+
+import LiveDataPage from './Pages/LiveDataPage';
 
 import './main.css'
 function App() {
   return (
     <div className="App">
-      <OperationData/>
+        <LiveDataPage></LiveDataPage>
     </div>
   );
 }

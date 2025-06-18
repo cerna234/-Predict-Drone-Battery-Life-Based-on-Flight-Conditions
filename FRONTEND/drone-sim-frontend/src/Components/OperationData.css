@@ -1,10 +1,63 @@
 
 .OperationDataContainer{
-    background-color: red;
-    width: 500px;
-    height: 500px;
+
+
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    background-image: url("https://thumbs.dreamstime.com/b/mountain-wireframe-hologram-style-nice-d-rendering-made-cinema-effects-90022258.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
     
+
+}
+
+.statsCircle{
+
+    width: 700px;
+    height: 700px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 100%;
+    border: 2px solid white;  
+    
+}
+
+.statsLeft,.statsRight{
+    height: 80%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+
+}
+.statsLeft{
+    align-items: flex-start;
+}
+.statsRight{
+    align-items: flex-end;
+}
+
+.missionSpecificStatContainer{
+    width: 100px;
+    height: 100px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(184, 177, 177, 0.55);
+    color: white;
+    
+}
+.missionSpecificStat{
+    position: relative;
+    padding: 20px;
+    font-size: 30px;
+
 }
