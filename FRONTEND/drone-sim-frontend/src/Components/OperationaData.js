@@ -32,6 +32,8 @@ function OperationData(props) {
 
 const [index,setIndex] = useState(0)
 
+
+
 const [date, setDate] = useState("2025-06-19");
 const [location, setLocation] = useState("afghanistan");
 const [droneType, setDroneType] = useState("RQ-11 Raven");
@@ -52,7 +54,8 @@ const [enemyContact, setEnemyContact] = useState(0);
  
 
   const handleSubmit = () => {
-    
+
+  
     const formData = {
       date,
       Location: location,
@@ -62,6 +65,9 @@ const [enemyContact, setEnemyContact] = useState(0);
       altitude,
       enemy_contact: enemyContact
     };
+
+    console.log(formData)
+    
     fetch('http://127.0.0.1:5000/live_data_prediction', {
       method: 'POST',
       headers: {
@@ -87,6 +93,7 @@ const [enemyContact, setEnemyContact] = useState(0);
   useEffect(() => {
   if (response.length > 0) {
     idealHourFunc();
+    
   }
   }, [response]);
 
@@ -94,6 +101,9 @@ const [enemyContact, setEnemyContact] = useState(0);
 
     let idealTime = 0
     let baseBatteryLife = 0
+    
+    
+    
 
     
 
@@ -110,114 +120,242 @@ const [enemyContact, setEnemyContact] = useState(0);
     
     
     setIndex(idealTime)
+    if(response.length > 0 ){
+      let prediction = Math.min(response[idealTime].model_battery_life_length_prediction * 1.7, 100);
+      setBatteryBarValue(prediction)
+      batteryBarColorFunc(prediction)
+    }
     
-    console.log("HERE")
+   
+    
+  
+  }
 
+  const updatingIndex = (isPrev) => {
+
+      if(isPrev){
+        setIndex(prev => Math.max(prev - 1, 0))
+        calculateBatteryBar(-1)
+      }
+      else{
+        
+        setIndex(prev => Math.min(prev + 1, response.length - 1))
+        calculateBatteryBar(1)
+      }
+      
+      
+
+      
+  }
+
+
+  const[batteryBarValue,setBatteryBarValue] = useState(0)
+  const[batteryBarColor,setBatteryBarColor] = useState("green")
+  const calculateBatteryBar = (offset) => {
+
+    let itemIdex = offset + index
+    let prediction = Math.min(response[itemIdex].model_battery_life_length_prediction * 1.7, 100);
+    
+    setBatteryBarValue(prediction)
+    batteryBarColorFunc(prediction)
+    
+
+
+    
+   
     
   }
 
+  const batteryBarColorFunc = (prediction) => {
+    if(prediction > 80){
+        setBatteryBarColor("green")
+    }
+    else if(prediction > 60){
+        setBatteryBarColor("yellow")
+    }
+    else if(prediction > 40){
+      setBatteryBarColor("orange")
+    }
+    else{
+      setBatteryBarColor("red")
+    }
+  }
+
+    
+
+   const today = new Date();
+
+  const dates = [
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
+  ].map(d => d.toISOString().slice(0, 10)); // Format YYYY-MM-DD
+
+  const[currentTime,setCurrentTime] = useState(0)
+  const startLiveTimeUpdater =  () => {
+  let currentTime = new Date().toLocaleTimeString();
+
+  // Immediately log or use the time
+  console.log("Current Time:", currentTime);
+
+  // Start updating every second
+  const interval = setInterval(() => {
+    currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+ 
+    setCurrentTime(currentTime)
+    // You can do anything with currentTime here (like update UI)
+  }, 1000);
+
+  // Return a way to stop it if needed
+  return () => clearInterval(interval);
+
+  }
+
+  useEffect(() => {
+    const stop = startLiveTimeUpdater(); // start on mount
+    return () => stop(); // cleanup on unmount
+  }, []);
+
   return (
     <div className="OperationDataContainer">
-      
-    
-        <div className="inputsSectionContainer">
-            <div className="inputsContainer">
-              <input value={date} onChange={(e) => setDate(e.target.value)} placeholder="date" />
-              <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="location" />
-              <input value={droneType} onChange={(e) => setDroneType(e.target.value)} placeholder="drone name" />
-              <input value={mission} onChange={(e) => setMission(e.target.value)} placeholder="mission" />
-              <input value={payload} onChange={(e) => setPayload(parseFloat(e.target.value))} placeholder="payload" />
-              <input value={altitude} onChange={(e) => setAltitude(parseFloat(e.target.value))} placeholder="altitude" />
-              <input value={enemyContact} onChange={(e) => setEnemyContact(parseInt(e.target.value))} placeholder="enemy contact" />
-                          
-               
-           
-            </div>
-            <button onClick={handleSubmit}>START SIM</button>
+
+
+        <h2 className="liveTime">{currentTime}</h2>
+
+        <div className="InputsSection">
+
+
+                 
+                <div className="inputsContainer">
+                  <h1 className="inputsSectionHeader">MISSION DATA</h1>    
+                 
+                  <select onChange={(e) => setDate(e.target.value)} className="simpleFuturisticDropdown">
+                      {dates.map(date => (
+                        <option key={date} value={date}>
+                          {date}
+                        </option>
+                    ))}
+                  </select>
+                  <input onChange={(e) => setLocation(e.target.value)} placeholder="LOCATION" />
+                  <input  onChange={(e) => setDroneType(e.target.value)} placeholder="DRONE NAME" />
+                  <input  onChange={(e) => setMission(e.target.value)} placeholder="MISSION" />
+                  <input  onChange={(e) => setPayload(parseFloat(e.target.value))} placeholder="PAYLOAD" />
+                  <input  onChange={(e) => setAltitude(parseFloat(e.target.value))} placeholder="ALTITUDE" />
+                  <input onChange={(e) => setEnemyContact(parseInt(e.target.value))} placeholder="ENEMY CONTACT" />
+                   <button onClick={handleSubmit} className="toggleButton">Submit</button>
+                </div>
+
           
         </div>
 
-          {
-            response.length > 0 ?
+        {response.length > 0 ?
             response.slice(index, index + 1).map((drone, i) => (
-              <div key={i} className="statsCirtcleContainer">
-             
-                <div className="statsCircle">
-                
 
-                  <div className="statsLeft">
-                    <div className="missionSpecificStatContainer" style={{ left: "40px" }}>
-                      <h2 className="dataIcon"> <TbTemperatureFahrenheit/> </h2>
-                      <h2 className="missionSpecificStat">{drone.missionData.temperature}</h2>
-                    </div>
 
-                    <div className="missionSpecificStatContainer" style={{ right: "80px" }}>
-                      <h2 className="dataIcon"><FiWind/></h2>
-                      <h2 className="missionSpecificStat">{drone.missionData.wind_speed}</h2>
-                    </div>
-
-                    <div className="missionSpecificStatContainer" style={{ right: "80px" }}>
-                      <h2 className="dataIcon"><IoRainyOutline/></h2>
-                      <h2 className="missionSpecificStat">{drone.missionData.rain}</h2>
-                    </div>
-
-                    <div className="missionSpecificStatContainer" style={{ left: "60px" }}>
-                      <h2 className="dataIcon"> <WiHumidity/> </h2>
-                      <h2 className="missionSpecificStat">{drone.missionData.humidity}</h2>
-                    </div>
-                  </div>
-
-                  <Drone hour={index} mission={drone.missionData.mission} batteryExpectancy={drone.model_battery_life_length_prediction}/>
-
-                  <div className="statsRight">
-                    <div className="missionSpecificStatContainer" style={{ right: "40px" }}>
-                      <h2 className="missionSpecificStat">{drone.missionData.payload}</h2>
-                      <h2 className="dataIcon"> <FaWeightHanging/> </h2>
-                    </div>
-
-                    <div className="missionSpecificStatContainer" style={{ left: "80px" }}>
-                      <h2 className="missionSpecificStat">{drone.missionData.altitude}</h2>
-                      <h2 className="dataIcon"> <CiLineHeight/> </h2>
-                    </div>
-
-                    <div className="missionSpecificStatContainer" style={{ left: "80px" }}>
-                      <h2 className="missionSpecificStat">{drone.missionData.temp_humidity}</h2>
-                      <h2 className="dataIcon"><TbTemperatureFahrenheit/>  X <IoRainyOutline/></h2>
-                    </div>
-
-                    <div className="missionSpecificStatContainer" style={{ right: "40px" }}>
-                      <h2 className="missionSpecificStat">{drone.missionData.wind_rain}</h2>
-                      <h2 className="dataIcon"><FiWind/> X <IoRainyOutline/> </h2>
-                    </div>
-                  </div>
+              <div className="droneStatsContainer">
+                   
+                <div className="droneSection">
+                  <Drone date = {drone.Hour_information.time} mission = {drone.missionData.mission} droneName= {drone.missionData.drone_type} windSpeed = {1} />
                 </div>
 
-                <div className="nextPreviousButtonsContainer">
-                    <button
-                      onClick={() => setIndex(prev => Math.max(prev - 1, 0))}
-                      disabled={index === 0}
-                    >
-                      PREVIOUS
-                    </button>
-                    <button 
-                      onClick={() => setIndex(prev => Math.min(prev + 1, response.length - 1))}
-                      disabled={index === response.length - 2}
-                    >
-                      NEXT
-                    </button>
-                    <button
-                      onClick={() => idealHourFunc()}
-                    >
-                      IDEAL TIME
-                    </button>
+                <div className="StatsSection">
+                    <div className="StatsSectionInner">
+                      <div className="missionStatsBox">
+                        <h1 className="missionStatsHeader">Predicted Weather Statistics</h1>
+                       <h2 className="missionStat">
+                          <span className="label">WIND VECTOR:</span> 
+                          <span className="value">{drone.missionData.wind_speed} mph</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">SURFACE TEMP:</span> 
+                          <span className="value">{drone.missionData.temperature} °F</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">CURRENT ALTITUDE:</span> 
+                          <span className="value">{drone.missionData.altitude} ft</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">HUMIDITY INDEX:</span> 
+                          <span className="value">{drone.missionData.humidity} %</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">PAYLOAD MASS:</span> 
+                          <span className="value">{drone.missionData.payload} kg</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">PRECIPITATION RATE:</span> 
+                          <span className="value">{drone.missionData.rain} mm</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">TEMP × HUMIDITY SIG:</span> 
+                          <span className="value">{drone.missionData.temp_humidity}</span>
+                        </h2>
+
+                        <h2 className="missionStat">
+                          <span className="label">WIND × RAIN SIG:</span> 
+                          <span className="value">{drone.missionData.wind_rain}</span>
+                        </h2>
+                        
+                      </div>
+
+                      <div className="BateryLifeExpectancyBox">
+                        <h1 className="BatteryLifeExpectancyBoxHeader">Predicted Weather Statistics</h1>
+                          <p className="BatteryLifeExpectancyMinutesValue">{drone.model_battery_life_length_prediction} MINS</p>
+                        <div className="BatteryLifeExpetancyBox">
+                          <div className="BatteryLifeExpetancyAmountDisplay" style={{width:`${batteryBarValue}%`, backgroundColor: batteryBarColor}}></div>
+                        </div>
+                      </div>
+
+                      <div className='ToggleButtonsSection'>
+                          <button
+                            onClick={() => updatingIndex(true)}
+                            disabled={index === 0}
+                            className="toggleButton"
+                          >
+                            PREVIOUS
+                          </button>
+                          <button 
+                            onClick={() => updatingIndex(false)}
+                            disabled={index === response.length - 2}
+                            className="toggleButton"
+                          >
+                            NEXT
+                          </button>
+                          <button
+                            onClick={() => idealHourFunc()}
+                            className="toggleButton"
+                          >
+                            IDEAL TIME
+                          </button>
+                      </div> 
+                    </div>
+
+
                 </div>
 
+
+
+
               </div>
-            )) 
-            : <div>
-                <h2 style={{color: "red"}}>Please enter things</h2>
-              </div>
-          }
+      
+            ))
+            :
+
+            <div>
+                "HELLO"
+            </div>
+ 
+
+            }
+
+            
+          
                     
           
           

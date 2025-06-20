@@ -50,39 +50,9 @@ def live_prediction_data():
 
 
         weather_Data = live_weather_data_helper(location,date)
-        '''
-mission_Data = {
-                "drone_type": "RQ-11 Raven",
-                "mission": "Surveillance",
-                "payload" : 0.32,
-                "altitude": 23,
-                "enemy_contact": 0,
-        }
 
-  
+        print(weather_Data)
 
-
-        prediction_data = [[
-                drone_type,
-                weather_Data.get("temperature"),
-                weather_Data.get("wind_speed"),
-                weather_Data.get("rain"),
-                weather_Data.get("humidity"),
-                weather_Data.get("time_of_day"),
-                mission,
-                payload,
-                altitude,
-                enemy_contact,
-                weather_Data.get("temp_humidity"),
-                weather_Data.get("wind_rain"),
-                
-                
-        ]]
-        
-        prediction = model.predict(prediction_data)
-
-        arr = np.round(np.array(prediction))
-        '''
         predicted_data = []
         for hour in weather_Data:
 

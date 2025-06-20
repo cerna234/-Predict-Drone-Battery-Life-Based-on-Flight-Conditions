@@ -2,13 +2,52 @@
 import './drone.css'
 
 function Drone(props) {
-  return (
-    <div className="drone_container">
 
-        <img className="drone_image" src="https://static.vecteezy.com/system/resources/previews/011/178/724/non_2x/unmanned-drone-isolated-on-white-background-with-clipping-path-elements-of-this-image-furnished-by-nasa-free-png.png"></img>
-        <h2 style={{color:"red"}}>HOUR: {props.hour}</h2>
-        <h2 style={{color:"red"}}>Mission: {props.mission}</h2>
-        <h2  style={{color:"red"}}>Battery Life Expentancy: {props.batteryExpectancy}</h2>
+  const clampedWind = Math.max(0.1, Math.min(props.windSpeed, 20));
+
+
+
+
+ const duration = props.windSpeed > 0 ? Math.max(0.15, 3 / props.windSpeed) : 3;
+  return (
+    <div className="droneContainer">
+
+        <div className='droneInfoSection'>
+          <h2 className='droneInfoSectionData'>DATE: {props.date}</h2>
+          <h2 className='droneInfoSectionData'>MISSION: {props.mission}</h2>
+          
+
+        </div>
+
+          <div className="droneImageContainer">
+          <div className="wind-lines">
+            {[...Array(10)].map((_, i) => (
+              <div
+                key={i}
+                className="wind-line"
+                style={{
+                  top: `${5 + i * 8}%`,
+                  animationDelay: `${i * 0.4}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          <img
+            className="drone_image"
+            src="https://static.vecteezy.com/system/resources/thumbnails/051/453/206/small_2x/3d-unmanned-aerial-vehicle-side-view-full-length-isolate-on-transparency-background-png.png"
+            alt="Drone"
+        
+          />
+          <div className='reportsExportButtonsSection'>
+            <button className='exportsButton'>Battery Prognosis</button>
+            <button className='exportsButton'>Drone Data</button> {/*popup screen of drone data*/}
+            <button className='exportsButton'>Location Data</button> {/*popup screen of location data including name, coordinates, current weather, etc*/}
+          </div>
+        </div>
+        
+        
+         
     </div>
   );
 }
