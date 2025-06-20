@@ -47,7 +47,9 @@ def live_prediction_data():
 
         location = input_data.get("Location")
         date = input_data.get("date")
+        base_life = input_data.get("base_life")
 
+        
 
         weather_Data = live_weather_data_helper(location,date)
 
@@ -65,6 +67,7 @@ def live_prediction_data():
                 temp_humidity = round(hour.get("feelslike_f") * hour.get("humidity"), 2)
                 wind_rain = round(hour.get("wind_mph") * rain, 2)
 
+
                 prediction_data = [[
                 drone_type,
                 hour.get("temp_f"),
@@ -77,6 +80,7 @@ def live_prediction_data():
                 altitude,
                 enemy_contact,
                 temp_humidity,
+                base_life,
                 wind_rain
                  
                 
@@ -105,6 +109,7 @@ def live_prediction_data():
                                 "altitude": altitude,
                                 "enemy_contact": enemy_contact,
                                 "temp_humidity": temp_humidity,
+                                "base_life": base_life,
                                 "wind_rain" : wind_rain
                         }
                         

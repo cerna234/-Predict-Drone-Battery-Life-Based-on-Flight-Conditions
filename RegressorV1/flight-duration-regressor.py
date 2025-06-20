@@ -9,16 +9,18 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import joblib
 import matplotlib.pyplot as plt
 
+
 # Load dataset
 dataset = pd.read_csv(fr'C:\Users\Miguel Cerna\OneDrive\Desktop\-Predict-Drone-Battery-Life-Based-on-Flight-Conditions\SimulatorV1\simulated_military_drones.csv')
 
 # Define feature indexes
 categorical_features = [0, 6]   # e.g., 'drone_type', 'mission'
-numeric_features = [1, 2, 4, 7, 8, 10, 11]  # e.g., temp, wind, etc.
+numeric_features = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12]  # e.g., temp, wind, etc.
 
 # Split features and target
-X = dataset.iloc[:, :-1]  # All columns except last
-y = dataset.iloc[:, -1]   # Last column
+X = dataset.iloc[:, :-1]   # all columns except last
+y = dataset.iloc[:, -1]    # last column as target
+
 
 # Define preprocessor
 preprocessor = ColumnTransformer(transformers=[
@@ -32,6 +34,7 @@ pipeline = Pipeline(steps=[
     ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
 ])
 
+
 # Train/test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -43,6 +46,16 @@ y_pred = pipeline.predict(X_test)
 
 # Save full pipeline (not just model)
 joblib.dump(pipeline, "drone-battery-life-regression-pipeline.joblib")
+
+mae = mean_absolute_error(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+r2 = r2_score(y_test, y_pred)
+
+
+print(f"MAE: {mae:.2f}")
+print(f"RMSE: {rmse:.2f}")
+print(f"R²: {r2:.3f}")
+
 
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred, alpha=0.3, color="purple")

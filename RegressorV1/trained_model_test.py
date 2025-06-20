@@ -4,12 +4,27 @@ from joblib import load
 model = load(fr'C:\Users\Miguel Cerna\OneDrive\Desktop\-Predict-Drone-Battery-Life-Based-on-Flight-Conditions\RegressorV1\drone-battery-life-regression-pipeline.joblib')  # 
 
 
-
+base_life = 60
 # Sample input
-#drone_type,temperature,wind_speed,rain,humidity,time_of_day,mission,payload,altitude,enemy_contact,temp_humidity,wind_rain
-sample_input = [['RQ-11 Raven',40,3,0,37.4,8,'surveillance',0.3,3,0,0,3]] 
+sample_input = [
+    [
+        "Wasp AE",     # drone_type
+        100,         # temperature (°C)
+        1,        # wind_speed (m/s)
+        0,            # rain (0=no, 1=yes)
+        30.77,        # humidity (%)
+        0,            # time_of_day (hour)
+        "strike",     # mission
+        0.071,        # payload (units)
+        1103.0,       # altitude (m)
+        1,            # enemy_contact (0=no, 1=yes)
+        189.73,       # temp_humidity (temp * humidity)
+        base_life,           # base_life (minutes)
+        0.0           # wind_rain (wind * rain)
+    ]
+]
 
 # Predict
 predicted_value = model.predict(sample_input)
 
-print(f"Predicted Value: {predicted_value[0]}")
+print(f"Predicted Value: {(predicted_value[0] /100 ) * base_life}")

@@ -2,7 +2,7 @@
 
 import Drone from "./drone";
 import './OperationData.css'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { FiWind } from "react-icons/fi";
 import { TbTemperatureFahrenheit } from "react-icons/tb";
 import { IoRainyOutline } from "react-icons/io5";
@@ -31,6 +31,8 @@ import { WiThermometer, WiRaindrop } from 'react-icons/wi';
 function OperationData(props) {
 
 const [index,setIndex] = useState(0)
+
+const [baseLife, setBaseLife] = useState(0)
 
 
 
@@ -63,6 +65,7 @@ const [enemyContact, setEnemyContact] = useState(0);
       mission,
       payload,
       altitude,
+      base_life: 3400,
       enemy_contact: enemyContact
     };
 
@@ -74,6 +77,7 @@ const [enemyContact, setEnemyContact] = useState(0);
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(formData)
+      
     })
       .then(res => res.json())
       .then(data => {
@@ -101,13 +105,7 @@ const [enemyContact, setEnemyContact] = useState(0);
 
     let idealTime = 0
     let baseBatteryLife = 0
-    
-    
-    
-
-    
-
-
+   
     for (let i = 0; i < response.length -1; i++) {
         let currBatteryLife = response[i].model_battery_life_length_prediction
 
@@ -125,6 +123,7 @@ const [enemyContact, setEnemyContact] = useState(0);
       setBatteryBarValue(prediction)
       batteryBarColorFunc(prediction)
     }
+    setBaseLife(response[idealTime].missionData.base_life)
     
    
     
@@ -136,11 +135,13 @@ const [enemyContact, setEnemyContact] = useState(0);
       if(isPrev){
         setIndex(prev => Math.max(prev - 1, 0))
         calculateBatteryBar(-1)
+        setBaseLife(response[index].missionData.base_life)
       }
       else{
         
         setIndex(prev => Math.min(prev + 1, response.length - 1))
         calculateBatteryBar(1)
+        setBaseLife(response[index].missionData.base_life)
       }
       
       
@@ -306,7 +307,7 @@ const [enemyContact, setEnemyContact] = useState(0);
 
                       <div className="BateryLifeExpectancyBox">
                         <h1 className="BatteryLifeExpectancyBoxHeader">Predicted Weather Statistics</h1>
-                          <p className="BatteryLifeExpectancyMinutesValue">{drone.model_battery_life_length_prediction} MINS</p>
+                          <p className="BatteryLifeExpectancyMinutesValue">{(drone.model_battery_life_length_prediction / 100 ) * baseLife } MINS</p>
                         <div className="BatteryLifeExpetancyBox">
                           <div className="BatteryLifeExpetancyAmountDisplay" style={{width:`${batteryBarValue}%`, backgroundColor: batteryBarColor}}></div>
                         </div>
