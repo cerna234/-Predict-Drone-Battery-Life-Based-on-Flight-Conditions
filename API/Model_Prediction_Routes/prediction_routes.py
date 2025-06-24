@@ -118,11 +118,8 @@ def live_prediction_data():
                 
                 
  
-        location_details = {
-                "location" : location,
-                "date" : date
-        }
-        predicted_data.append(location_details)
+      
+   
         
         
         return jsonify(predicted_data)

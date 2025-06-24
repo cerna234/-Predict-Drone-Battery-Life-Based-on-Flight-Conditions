@@ -6,28 +6,28 @@ DRONES = {
     "MQ-9 Reaper": {
         "base_life": 2400,
         "max_payload": 1700,
-        "wind_sensitivity": 0.4,
+        "wind_sensitivity": 1.4,
         "rain_penalty": 10,
         "payload_factor": 0.5
     },
     "RQ-4 Global Hawk": {
         "base_life": 3600,
         "max_payload": 1360,
-        "wind_sensitivity": 0.3,
+        "wind_sensitivity": 1.3,
         "rain_penalty": 8,
         "payload_factor": 0.6
     },
     "ScanEagle": {
         "base_life": 900,
         "max_payload": 3.0,
-        "wind_sensitivity": 0.7,
+        "wind_sensitivity": 1.7,
         "rain_penalty": 12,
         "payload_factor": 10
     },
     "Wasp AE": {
         "base_life": 60,
         "max_payload": 0.1,
-        "wind_sensitivity": 1.2,
+        "wind_sensitivity": 2.2,
         "rain_penalty": 18,
         "payload_factor": 120
     }
@@ -55,7 +55,7 @@ def simulate_flight(drone_type):
         temp_penalty = (temp - 20) * 0.2
     
     # Wind penalty: quadratic with drone-specific sensitivity
-    wind_penalty = (wind ** 2) * 0.1 * specs["wind_sensitivity"]
+    wind_penalty = (wind ** 3) * 0.03 * specs["wind_sensitivity"]
 
     rain_penalty = specs["rain_penalty"] if rain else 0
     humidity_penalty = humidity * 0.05

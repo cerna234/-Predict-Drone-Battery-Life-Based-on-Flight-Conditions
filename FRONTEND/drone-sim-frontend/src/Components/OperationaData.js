@@ -1,369 +1,250 @@
-
-
+import React, { useState, useEffect } from 'react';
 import Drone from "./drone";
-import './OperationData.css'
-import React, { useState, useEffect, use } from 'react';
-import { FiWind } from "react-icons/fi";
-import { TbTemperatureFahrenheit } from "react-icons/tb";
-import { IoRainyOutline } from "react-icons/io5";
-import { WiHumidity } from "react-icons/wi";
-import { FaWeightHanging } from "react-icons/fa";
-import { CiLineHeight } from "react-icons/ci";
-import { WiThermometer, WiRaindrop } from 'react-icons/wi';
-/*
+import './OperationData.css';
+import { GrPrevious, GrNext } from "react-icons/gr";
 
-#DATA NEEDED FOR OUTER CIRCLE: 
-# {
-# drone_type, NO
-# temperature, YES
-# wind_speed, YES
-# rain, YES
-# humidity, YES
-# time_of_day, NO
-# mission, NO
-# payload, YES
-# altitude, YES
-# enemy_contact, NO
-# temp_humidity, YES 
-# wind_rain YES
-#}
-*/
-function OperationData(props) {
+const droneConfigs = [
+  {
+    name: "ScanEagle",
+    image: "/Images/ScanEagle.png",
+    baseLife: 900
+  },
+  {
+    name: "Wasp AE",
+    image: "/Images/WaspAE.png",
+    baseLife: 60
+  },
+  {
+    name: "RQ-4 Global Hawk",
+    image: "/Images/rq-4globalHawk.png",
+    baseLife: 3600
+  },
+  {
+    name: "MQ-9 Reaper",
+    image: "/Images/MQ-9 Reaper.png",
+    baseLife: 2400
+  }
+];
 
-const [index,setIndex] = useState(0)
+function OperationData() {
+  const [imageIndex, setImageIndex] = useState(0);
+  const selectedDrone = droneConfigs[imageIndex];
 
-const [baseLife, setBaseLife] = useState(0)
+  const [baseLife, setBaseLife] = useState(selectedDrone.baseLife);
+  const [droneType, setDroneType] = useState(selectedDrone.name);
+  const [date, setDate] = useState();
+  const [location, setLocation] = useState("afghanistan");
+  const [mission, setMission] = useState("Surveillance");
+  const [payload, setPayload] = useState(0.071);
+  const [altitude, setAltitude] = useState(23);
+  const [enemyContact, setEnemyContact] = useState(0);
+  const [response, setResponse] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
+  useEffect(() => {
+    setBaseLife(selectedDrone.baseLife);
+    setDroneType(selectedDrone.name);
+  }, [imageIndex]);
 
+  useEffect(() => {
+    const stop = startLiveTimeUpdater();
+    return () => stop();
+  }, []);
 
-const [date, setDate] = useState("2025-06-19");
-const [location, setLocation] = useState("afghanistan");
-const [droneType, setDroneType] = useState("RQ-11 Raven");
-const [mission, setMission] = useState("Surveillance");
-const [payload, setPayload] = useState(0.32);
-const [altitude, setAltitude] = useState(23);
-const [enemyContact, setEnemyContact] = useState(0);
+  const startLiveTimeUpdater = () => {
+    let currentTime = new Date().toLocaleTimeString();
+    setCurrentTime(currentTime);
 
+    const interval = setInterval(() => {
+      currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+      setCurrentTime(currentTime);
+    }, 1000);
 
-
-
-
-
-
-
-   const [response, setResponse] = useState([]);
-
- 
-
-  const handleSubmit = () => {
-
-  
-    const formData = {
-      date,
-      Location: location,
-      drone_type: droneType,
-      mission,
-      payload,
-      altitude,
-      base_life: 3400,
-      enemy_contact: enemyContact
-    };
-
-    console.log(formData)
-    
-    fetch('http://127.0.0.1:5000/live_data_prediction', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData)
-      
-    })
-      .then(res => res.json())
-      .then(data => {
-    setResponse(data);
-
-        if (data.length > 0) {
-          idealHourFunc();
-        } else {
-          console.log("NOT READY");
-        }
-      });
-
-    
+    return () => clearInterval(interval);
   };
 
 
-  useEffect(() => {
-  if (response.length > 0) {
-    idealHourFunc();
-    
-  }
-  }, [response]);
 
-  const idealHourFunc = () => {
+  const handleSubmit = () => {
+    const formData = {
+      date,
+      Location: location,
+      drone_type: selectedDrone.name,
+      mission,
+      payload,
+      altitude,
+      base_life: selectedDrone.baseLife,
+      enemy_contact: enemyContact
+    };
 
-    let idealTime = 0
-    let baseBatteryLife = 0
-   
-    for (let i = 0; i < response.length -1; i++) {
-        let currBatteryLife = response[i].model_battery_life_length_prediction
-
-        if(currBatteryLife > baseBatteryLife){
-          baseBatteryLife = currBatteryLife
-          idealTime = i
-        }
-       
-    }
-    
-    
-    setIndex(idealTime)
-    if(response.length > 0 ){
-      let prediction = Math.min(response[idealTime].model_battery_life_length_prediction * 1.7, 100);
-      setBatteryBarValue(prediction)
-      batteryBarColorFunc(prediction)
-    }
-    setBaseLife(response[idealTime].missionData.base_life)
-    
-   
-    
-  
-  }
+    fetch('http://127.0.0.1:5000/live_data_prediction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+      .then(res => res.json())
+      .then(data => {
+        setResponse(data)
+        console.log(data)
+      }
+      );
+      
+  };
 
   const updatingIndex = (isPrev) => {
-
-      if(isPrev){
-        setIndex(prev => Math.max(prev - 1, 0))
-        calculateBatteryBar(-1)
-        setBaseLife(response[index].missionData.base_life)
-      }
-      else{
-        
-        setIndex(prev => Math.min(prev + 1, response.length - 1))
-        calculateBatteryBar(1)
-        setBaseLife(response[index].missionData.base_life)
-      }
-      
-      
-
-      
-  }
-
-
-  const[batteryBarValue,setBatteryBarValue] = useState(0)
-  const[batteryBarColor,setBatteryBarColor] = useState("green")
-  const calculateBatteryBar = (offset) => {
-
-    let itemIdex = offset + index
-    let prediction = Math.min(response[itemIdex].model_battery_life_length_prediction * 1.7, 100);
     
-    setBatteryBarValue(prediction)
-    batteryBarColorFunc(prediction)
-    
-
-
-    
-   
-    
-  }
-
-  const batteryBarColorFunc = (prediction) => {
-    if(prediction > 80){
-        setBatteryBarColor("green")
+    if (isPrev) {
+      setIndex(prev => Math.max(prev - 1, 0));
+    } else {
+      setIndex(prev => Math.min(prev + 1, response.length ));
     }
-    else if(prediction > 60){
-        setBatteryBarColor("yellow")
-    }
-    else if(prediction > 40){
-      setBatteryBarColor("orange")
-    }
-    else{
-      setBatteryBarColor("red")
-    }
-  }
+  };
 
-    
-
-   const today = new Date();
-
+  const today = new Date();
   const dates = [
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
-  ].map(d => d.toISOString().slice(0, 10)); // Format YYYY-MM-DD
+  ].map(d => d.toISOString().slice(0, 10));
 
-  const[currentTime,setCurrentTime] = useState(0)
-  const startLiveTimeUpdater =  () => {
-  let currentTime = new Date().toLocaleTimeString();
 
-  // Immediately log or use the time
-  console.log("Current Time:", currentTime);
 
-  // Start updating every second
-  const interval = setInterval(() => {
-    currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
- 
-    setCurrentTime(currentTime)
-    // You can do anything with currentTime here (like update UI)
-  }, 1000);
-
-  // Return a way to stop it if needed
-  return () => clearInterval(interval);
-
-  }
-
-  useEffect(() => {
-    const stop = startLiveTimeUpdater(); // start on mount
-    return () => stop(); // cleanup on unmount
-  }, []);
 
   return (
     <div className="OperationDataContainer">
+      <h2 className="liveTime">{currentTime}</h2>
 
-
-        <h2 className="liveTime">{currentTime}</h2>
-
-        <div className="InputsSection">
-
-
-                 
-                <div className="inputsContainer">
-                  <h1 className="inputsSectionHeader">MISSION DATA</h1>    
-                 
-                  <select onChange={(e) => setDate(e.target.value)} className="simpleFuturisticDropdown">
-                      {dates.map(date => (
-                        <option key={date} value={date}>
-                          {date}
-                        </option>
-                    ))}
-                  </select>
-                  <input onChange={(e) => setLocation(e.target.value)} placeholder="LOCATION" />
-                  <input  onChange={(e) => setDroneType(e.target.value)} placeholder="DRONE NAME" />
-                  <input  onChange={(e) => setMission(e.target.value)} placeholder="MISSION" />
-                  <input  onChange={(e) => setPayload(parseFloat(e.target.value))} placeholder="PAYLOAD" />
-                  <input  onChange={(e) => setAltitude(parseFloat(e.target.value))} placeholder="ALTITUDE" />
-                  <input onChange={(e) => setEnemyContact(parseInt(e.target.value))} placeholder="ENEMY CONTACT" />
-                   <button onClick={handleSubmit} className="toggleButton">Submit</button>
-                </div>
-
-          
+      <div className="InputsSection">
+        <div className="inputsContainer">
+          <h1 className="inputsSectionHeader">MISSION DATA</h1>
+          <select onChange={(e) => setDate(e.target.value)}>
+            {dates.map(date => (
+              <option key={date} value={date}>{date}</option>
+            ))}
+          </select>
+          <input onChange={(e) => setLocation(e.target.value)} placeholder="LOCATION" />
+          <input onChange={(e) => setMission(e.target.value)} placeholder="MISSION" />
+          <input onChange={(e) => setPayload(parseFloat(e.target.value))} placeholder="PAYLOAD" />
+          <input onChange={(e) => setAltitude(parseFloat(e.target.value))} placeholder="ALTITUDE" />
+          <input onChange={(e) => setEnemyContact(parseInt(e.target.value))} placeholder="ENEMY CONTACT" />
+          <button onClick={handleSubmit} className="toggleButton">Submit</button>
         </div>
+      </div>
 
-        {response.length > 0 ?
-            response.slice(index, index + 1).map((drone, i) => (
-
-
-              <div className="droneStatsContainer">
-                   
-                <div className="droneSection">
-                  <Drone date = {drone.Hour_information.time} mission = {drone.missionData.mission} droneName= {drone.missionData.drone_type} windSpeed = {1} />
-                </div>
-
-                <div className="StatsSection">
-                    <div className="StatsSectionInner">
-                      <div className="missionStatsBox">
-                        <h1 className="missionStatsHeader">Predicted Weather Statistics</h1>
-                       <h2 className="missionStat">
-                          <span className="label">WIND VECTOR:</span> 
-                          <span className="value">{drone.missionData.wind_speed} mph</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">SURFACE TEMP:</span> 
-                          <span className="value">{drone.missionData.temperature} °F</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">CURRENT ALTITUDE:</span> 
-                          <span className="value">{drone.missionData.altitude} ft</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">HUMIDITY INDEX:</span> 
-                          <span className="value">{drone.missionData.humidity} %</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">PAYLOAD MASS:</span> 
-                          <span className="value">{drone.missionData.payload} kg</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">PRECIPITATION RATE:</span> 
-                          <span className="value">{drone.missionData.rain} mm</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">TEMP × HUMIDITY SIG:</span> 
-                          <span className="value">{drone.missionData.temp_humidity}</span>
-                        </h2>
-
-                        <h2 className="missionStat">
-                          <span className="label">WIND × RAIN SIG:</span> 
-                          <span className="value">{drone.missionData.wind_rain}</span>
-                        </h2>
-                        
-                      </div>
-
-                      <div className="BateryLifeExpectancyBox">
-                        <h1 className="BatteryLifeExpectancyBoxHeader">Predicted Weather Statistics</h1>
-                          <p className="BatteryLifeExpectancyMinutesValue">{(drone.model_battery_life_length_prediction / 100 ) * baseLife } MINS</p>
-                        <div className="BatteryLifeExpetancyBox">
-                          <div className="BatteryLifeExpetancyAmountDisplay" style={{width:`${batteryBarValue}%`, backgroundColor: batteryBarColor}}></div>
-                        </div>
-                      </div>
-
-                      <div className='ToggleButtonsSection'>
-                          <button
-                            onClick={() => updatingIndex(true)}
-                            disabled={index === 0}
-                            className="toggleButton"
-                          >
-                            PREVIOUS
-                          </button>
-                          <button 
-                            onClick={() => updatingIndex(false)}
-                            disabled={index === response.length - 2}
-                            className="toggleButton"
-                          >
-                            NEXT
-                          </button>
-                          <button
-                            onClick={() => idealHourFunc()}
-                            className="toggleButton"
-                          >
-                            IDEAL TIME
-                          </button>
-                      </div> 
-                    </div>
-
-
-                </div>
-
-
-
-
+      {response.length > 0 ? response.slice(index, index + 1).map((drone, i) => (
+        <div className="droneStatsContainer" key={i}>
+          <div className="droneSection">
+            <div className="dronSectionSelection">
+              <div className="DroneSelectorSection">
+                <img
+                  className="droneSelectorButtonImage"
+                  src={droneConfigs[imageIndex - 1]?.image}
+                  style={{ opacity: imageIndex <= 0 ? 0 : 0.6 }}
+                  alt="Prev Drone"
+                />
               </div>
-      
-            ))
-            :
 
-            <div>
-                "HELLO"
+              <div className="toggleDroneButtons">
+                <button
+                  className="toggleDroneButton"
+                  onClick={() => {
+                    setImageIndex(prev => Math.max(prev - 1, 0))
+                    handleSubmit();
+                  }}
+                  disabled={imageIndex === 0}
+                >
+                  <GrPrevious />
+                </button>
+                <button
+                  className="toggleDroneButton"
+                  onClick={() => {
+                    setImageIndex(prev => Math.min(prev + 1, droneConfigs.length - 1))
+                    handleSubmit();
+
+                  }}
+                  disabled={imageIndex === droneConfigs.length - 1}
+                >
+                  <GrNext />
+                </button>
+              </div>
+
+              <div className="DroneSelectorSection">
+                <img
+                  className="droneSelectorButtonImage"
+                  src={droneConfigs[imageIndex + 1]?.image}
+                  style={{ opacity: imageIndex >= droneConfigs.length - 1 ? 0 : 0.6 }}
+                  alt="Next Drone"
+                />
+              </div>
             </div>
- 
 
-            }
+            <Drone
+              droneName={selectedDrone.name}
+              droneImage={selectedDrone.image}
+              baseLife={baseLife}
+              date={drone.Hour_information.time}
+              mission={drone.missionData.mission}
+            />
+          </div>
 
-            
-          
-                    
-          
-          
-          
-          
-        
-        
+          <div className="StatsSection">
+            <div className="StatsSectionInner">
+              <div className="missionStatsBox">
+                <h1 className="missionStatsHeader">Predicted Weather Statistics</h1>
+                <h2 className="missionStat"><span className="label">WIND VECTOR:</span> <span className="value">{drone.missionData.wind_speed} mph</span></h2>
+                <h2 className="missionStat"><span className="label">SURFACE TEMP:</span> <span className="value">{drone.missionData.temperature} °F</span></h2>
+                <h2 className="missionStat"><span className="label">CURRENT ALTITUDE:</span> <span className="value">{drone.missionData.altitude} ft</span></h2>
+                <h2 className="missionStat"><span className="label">HUMIDITY INDEX:</span> <span className="value">{drone.missionData.humidity} %</span></h2>
+                <h2 className="missionStat"><span className="label">PAYLOAD MASS:</span> <span className="value">{drone.missionData.payload} kg</span></h2>
+                <h2 className="missionStat"><span className="label">PRECIPITATION RATE:</span> <span className="value">{drone.missionData.rain} mm</span></h2>
+                <h2 className="missionStat"><span className="label">TEMP × HUMIDITY SIG:</span> <span className="value">{drone.missionData.temp_humidity}</span></h2>
+                <h2 className="missionStat"><span className="label">WIND × RAIN SIG:</span> <span className="value">{drone.missionData.wind_rain}</span></h2>
+              </div>
+
+              <div className="BateryLifeExpectancyBox">
+                <h1 className="BatteryLifeExpectancyBoxHeader">Battery Life Prediction</h1>
+                <p className="BatteryLifeExpectancyMinutesValue">
+                  {(drone.model_battery_life_length_prediction / 100) * baseLife} MINS
+                </p>
+                <div className="BatteryLifeExpetancyBox">
+                  <div
+                    className="BatteryLifeExpetancyAmountDisplay"
+                    style={{
+                      width: `${(drone.model_battery_life_length_prediction)}%`,
+                      backgroundColor: "green"
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className='ToggleButtonsSection'>
+                <button
+                  onClick={() => {
+                    updatingIndex(true)
+                     console.log("index:", index, "response.length:", response.length);
+                  }}
+                  disabled={index === 0}
+                  className="toggleButton"
+                >
+                  PREVIOUS HOUR
+                </button>
+                <button
+                  onClick={() => {
+                    updatingIndex(false)
+                    console.log("index:", index, "response.length:", response.length);
+                  }}
+                  disabled={index + 1 >= response.length }
+                  className="toggleButton"
+                >
+                  NEXT HOUR
+                </button>
+                <button className="toggleButton">IDEAL TIME</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )) : <div>"HELLO"</div>}
     </div>
   );
 }

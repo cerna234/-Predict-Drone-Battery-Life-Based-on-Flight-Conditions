@@ -8,7 +8,7 @@ base_life = 60
 # Sample input
 sample_input = [
     [
-        "Wasp AE",     # drone_type
+        "ScanEagle",     # drone_type
         100,         # temperature (°C)
         1,        # wind_speed (m/s)
         0,            # rain (0=no, 1=yes)
@@ -18,7 +18,7 @@ sample_input = [
         0.071,        # payload (units)
         1103.0,       # altitude (m)
         1,            # enemy_contact (0=no, 1=yes)
-        189.73,       # temp_humidity (temp * humidity)
+        5000,       # temp_humidity (temp * humidity)
         base_life,           # base_life (minutes)
         0.0           # wind_rain (wind * rain)
     ]

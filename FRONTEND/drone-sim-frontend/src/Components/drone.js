@@ -15,6 +15,8 @@ function Drone(props) {
         <div className='droneInfoSection'>
           <h2 className='droneInfoSectionData'>DATE: {props.date}</h2>
           <h2 className='droneInfoSectionData'>MISSION: {props.mission}</h2>
+          <h2 className='droneInfoSectionData'>BASE LIFE: {props.baseLife}</h2>
+          <h2 className='droneInfoSectionData'>DRONE NAME: {props.droneName}</h2>
           
 
         </div>
@@ -35,7 +37,7 @@ function Drone(props) {
 
           <img
             className="drone_image"
-            src="https://static.vecteezy.com/system/resources/thumbnails/051/453/206/small_2x/3d-unmanned-aerial-vehicle-side-view-full-length-isolate-on-transparency-background-png.png"
+            src={props.droneImage}
             alt="Drone"
         
           />
@@ -43,6 +45,10 @@ function Drone(props) {
             <button className='exportsButton'>Battery Prognosis</button>
             <button className='exportsButton'>Drone Data</button> {/*popup screen of drone data*/}
             <button className='exportsButton'>Location Data</button> {/*popup screen of location data including name, coordinates, current weather, etc*/}
+          </div>
+
+          <div className='toggleDrones'>
+
           </div>
         </div>
         

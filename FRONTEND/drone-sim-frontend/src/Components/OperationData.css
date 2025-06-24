@@ -72,10 +72,68 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+   
+}
+.dronSectionSelection{
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.DroneSelectorSection{
+    
+    width: 40%;
+    height: 80%;
+    display: flex;
+    align-items: center;
     justify-content: center;
    
 }
 
+
+.toggleDroneButtons{
+    position: relative;
+     width: 20%;
+     height: 10%;
+     top: 30%;
+     z-index: 100;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+}
+
+.toggleDroneButton{
+    background: rgba(0, 0, 0, 0); /* transparent but with some depth */
+    border: 2px solid #167902; /* neon cyan */
+    border-radius: 12px;
+    color: #04e229;
+    font-size: 20px;
+    padding: 5px 10px;
+    text-shadow: 0 0 5px #1de603, 0 0 10px #045a20;
+    font-family: 'Orbitron', sans-serif; /* futuristic font */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px #00ffff33, 0 0 10px #00ffff22;
+}
+.toggleDroneButton:hover {
+    background: #00ffff22;
+    box-shadow: 0 0 10px #00cc00, 0 0 20px #1d7701;
+    color: #ffffff;
+}
+
+.droneSelectorButtonImage{
+    width: 80px;
+    height: 90px;
+    opacity: 50%;
+  
+   
+}
 
 /* STATS SECTION */
 .StatsSection{
