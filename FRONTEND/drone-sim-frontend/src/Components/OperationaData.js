@@ -22,7 +22,7 @@ function OperationData() {
 const currentdate = new Date(
   defaultdateToday.getFullYear(),
   defaultdateToday.getMonth(),
-  defaultdateToday.getDate() 
+  defaultdateToday.getDate() + 1
 );
   const [date, setDate] = useState(currentdate.toISOString().split('T')[0]);
   const [location, setLocation] = useState("afghanistan");
@@ -108,6 +108,7 @@ const currentdate = new Date(
         }));
        
         batteryColorFunc()
+        
        
       });
 
@@ -161,9 +162,9 @@ const currentdate = new Date(
 
   const today = new Date();
   const dates = [
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() ),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1 ),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
   ].map(d => d.toISOString().slice(0, 10));
 
   return (
@@ -233,6 +234,7 @@ const currentdate = new Date(
               baseLife={selectedDrone.baseLife}
               date={response[index].Hour_information.time}
               mission={response[index].missionData.mission}
+              BatteryLifeData = {response}
             />
           </div>
 

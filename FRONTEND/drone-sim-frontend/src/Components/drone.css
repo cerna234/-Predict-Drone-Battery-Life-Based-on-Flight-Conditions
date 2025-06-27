@@ -154,9 +154,10 @@
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  z-index: 100;
 }
 
-.exportsButton{
+.exportsButton,.exportsButtonBatteryProg{
     background: linear-gradient(145deg, #1c1c1c, #2d2d2d);
   color: #00ff9f; /* Tactical neon green */
   border: 2px solid #00ff9f;
@@ -170,4 +171,8 @@
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   background-clip: padding-box;
+}
+
+.exportsButtonBatteryProg:hover{
+  background: linear-gradient(145deg, #cec4c4f8, #c7c7c7);
 }

@@ -1,14 +1,21 @@
 
+import { useState } from 'react';
+import BatteryPrognosisPopup from './batteryPrognosisPopup'
 import './drone.css'
+
 
 function Drone(props) {
 
-  const clampedWind = Math.max(0.1, Math.min(props.windSpeed, 20));
-
-
-
-
- const duration = props.windSpeed > 0 ? Math.max(0.15, 3 / props.windSpeed) : 3;
+  const [batteryPopupShowing, setBatteryPopupShowing] = useState(false)
+  const batteryPrognosis = () => {
+    console.log(batteryPopupShowing)
+      if(batteryPopupShowing == true){
+        setBatteryPopupShowing(false)
+      }
+      else{
+        setBatteryPopupShowing(true)
+      }
+  }
   return (
     <div className="droneContainer">
 
@@ -42,7 +49,13 @@ function Drone(props) {
         
           />
           <div className='reportsExportButtonsSection'>
-            <button className='exportsButton'>Battery Prognosis</button>
+            <button onClick={() => 
+              batteryPrognosis()
+              } 
+              className='exportsButtonBatteryProg'
+              >Battery Prognosis
+            </button>
+
             <button className='exportsButton'>Drone Data</button> {/*popup screen of drone data*/}
             <button className='exportsButton'>Location Data</button> {/*popup screen of location data including name, coordinates, current weather, etc*/}
           </div>
@@ -53,7 +66,12 @@ function Drone(props) {
         </div>
         
         
-         
+       <BatteryPrognosisPopup 
+          shown={batteryPopupShowing} 
+          data={props.BatteryLifeData}
+          onClose={() => setBatteryPopupShowing(false)} 
+          
+        />
     </div>
   );
 }
