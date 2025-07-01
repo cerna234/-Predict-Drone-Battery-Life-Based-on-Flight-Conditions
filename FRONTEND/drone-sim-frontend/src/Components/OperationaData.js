@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Drone from "./drone";
 import './OperationData.css';
 import { GrPrevious, GrNext } from "react-icons/gr";
@@ -15,15 +15,13 @@ function OperationData() {
   const [imageIndex, setImageIndex] = useState(0);
   const selectedDrone = droneConfigs[imageIndex];
 
-
-
-  
   const defaultdateToday = new Date();
-const currentdate = new Date(
-  defaultdateToday.getFullYear(),
-  defaultdateToday.getMonth(),
-  defaultdateToday.getDate() + 1
-);
+  const currentdate = new Date(
+    defaultdateToday.getFullYear(),
+    defaultdateToday.getMonth(),
+    defaultdateToday.getDate() + 1
+  );
+
   const [date, setDate] = useState(currentdate.toISOString().split('T')[0]);
   const [location, setLocation] = useState("afghanistan");
   const [mission, setMission] = useState("Surveillance");
@@ -33,13 +31,13 @@ const currentdate = new Date(
   const [index, setIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [batteryLife, setBatteryLife] = useState(0);
-  const [batteryColor, setBatteryColor] = useState("green")
-
-  const [loadingBar,setLoadingBar] = useState(false)
-  
-
+  const [batteryColor, setBatteryColor] = useState("green");
+  const [loadingBar, setLoadingBar] = useState(false);
   const [allResponses, setAllResponses] = useState({});
-  const response = allResponses[selectedDrone.name] || [];
+
+  const response = useMemo(() => {
+    return allResponses[selectedDrone.name] || [];
+  }, [allResponses, selectedDrone.name]);
 
   useEffect(() => {
     const stop = startLiveTimeUpdater();
@@ -58,25 +56,25 @@ const currentdate = new Date(
     return () => clearInterval(interval);
   };
 
-  const idealHour = () => {
-    if(response.length > 0){
-      let idealhour = 0
-      for(let i = 0; i < response.length; i++){
+  const batteryColorFunc = useCallback(() => {
+    if (response.length > 0) {
+      const batteryPercentage = response[index].model_battery_life_length_prediction;
 
-        
-        if(response[i].model_battery_life_length_prediction > response[idealhour].model_battery_life_length_prediction){
-          idealhour = i
-        }
-
-
-      
-      
+      if (batteryPercentage >= 0 && batteryPercentage < 20) {
+        setBatteryColor("red");
+      } else if (batteryPercentage >= 20 && batteryPercentage < 50) {
+        setBatteryColor("orange");
+      } else if (batteryPercentage >= 50 && batteryPercentage < 80) {
+        setBatteryColor("yellow");
+      } else if (batteryPercentage >= 80 && batteryPercentage <= 100) {
+        setBatteryColor("green");
+      } else {
+        setBatteryColor("gray");
       }
-      setIndex(idealhour)
-      }
-  }
+    }
+  }, [response, index]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const formData = {
       date,
       Location: location,
@@ -88,9 +86,8 @@ const currentdate = new Date(
       enemy_contact: enemyContact
     };
 
-    console.log(formData)
-    
-    setLoadingBar(true)
+   
+    setLoadingBar(true);
     fetch('http://127.0.0.1:5000/live_data_prediction', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -98,35 +95,55 @@ const currentdate = new Date(
     })
       .then(res => res.json())
       .then(data => {
-        
         setAllResponses(prev => ({
           ...prev,
           [selectedDrone.name]: data
-          
-
-          
         }));
-       
-        batteryColorFunc()
-        
-       
+        batteryColorFunc();
       });
+  }, [
+    date,
+    location,
+    selectedDrone.name,
+    selectedDrone.baseLife,
+    mission,
+    payload,
+    altitude,
+    enemyContact,
+    batteryColorFunc
+  ]);
 
-      
-  };
+  const idealHour = useCallback(() => {
+    if (response.length > 0) {
+      let idealhour = 0;
+      for (let i = 0; i < response.length; i++) {
+        if (
+          response[i].model_battery_life_length_prediction >
+          response[idealhour].model_battery_life_length_prediction
+        ) {
+          idealhour = i;
+        }
+      }
+      setIndex(idealhour);
+    }
+  }, [response]);
 
-  // Fetch new data when imageIndex changes
   useEffect(() => {
     if (date) {
       handleSubmit();
-      idealHour();
     }
-  }, [imageIndex]);
+  }, [imageIndex, date, handleSubmit]);
 
-  // Update battery life when data or index changes
+  useEffect(() => {
+    idealHour();
+  }, [response, idealHour]);
+
   useEffect(() => {
     if (response.length > 0 && response[index]) {
-      setBatteryLife((response[index].model_battery_life_length_prediction / 100) * selectedDrone.baseLife);
+      setBatteryLife(
+        (response[index].model_battery_life_length_prediction / 100) *
+        selectedDrone.baseLife
+      );
     }
   }, [response, index, selectedDrone.baseLife]);
 
@@ -138,33 +155,10 @@ const currentdate = new Date(
     }
   };
 
-  const batteryColorFunc = () => {
-  if (response.length > 0) {
-    const batteryPercentage = response[index].model_battery_life_length_prediction;
-    console.log(response[index])
-
-    if (batteryPercentage >= 0 && batteryPercentage < 20) {
-      setBatteryColor("red");
-    } else if (batteryPercentage >= 20 && batteryPercentage < 50) {
-      setBatteryColor("orange");
-    } else if (batteryPercentage >= 50 && batteryPercentage < 80) {
-      setBatteryColor("yellow");
-    } else if (batteryPercentage >= 80 && batteryPercentage <= 100) {
-      setBatteryColor("green");
-    } else {
-      // Invalid value case: set to a neutral/fallback color
-      setBatteryColor("gray");
-    }
-  }
-};
-
-
-
   const today = new Date();
   const dates = [
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1 ),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
-    
   ].map(d => d.toISOString().slice(0, 10));
 
   return (
@@ -234,7 +228,7 @@ const currentdate = new Date(
               baseLife={selectedDrone.baseLife}
               date={response[index].Hour_information.time}
               mission={response[index].missionData.mission}
-              BatteryLifeData = {response}
+              BatteryLifeData={response}
             />
           </div>
 
@@ -252,19 +246,19 @@ const currentdate = new Date(
                 <h2 className="missionStat"><span className="label">WIND × RAIN SIG:</span> <span className="value">{response[index].missionData.wind_rain}</span></h2>
               </div>
 
-              <div className="BateryLifeExpectancyBox">
+              <div className="BatteryLifeExpectancyBox">
                 <h1 className="BatteryLifeExpectancyBoxHeader">Battery Life Prediction</h1>
                 <p className="BatteryLifeExpectancyMinutesValue">
                   {batteryLife.toFixed(2)} MINS
                 </p>
                 <div className="BatteryLifeExpetancyBox">
                   <div
-                    className="BatteryLifeExpetancyAmountDisplay"
                     style={{
                       width: `${response[index].model_battery_life_length_prediction}%`,
                       backgroundColor: batteryColor
                     }}
-                  />
+                    className='BatteryLifeExpetancyAmountDisplay'>
+                  </div>
                 </div>
               </div>
 
@@ -284,26 +278,21 @@ const currentdate = new Date(
                   NEXT HOUR
                 </button>
                 <button
-                onClick={() => {
-                   idealHour()
-                }} 
-                className="toggleButton">IDEAL TIME</button>
+                  onClick={() => idealHour()}
+                  className="toggleButton">IDEAL TIME</button>
               </div>
             </div>
           </div>
         </div>
-      ) : 
-      
-      <div className='LoadingScreen'>
-         {loadingBar ? (
-            <ClipLoader
-             color="#36d7b7" 
-             loading={true} 
-             size={100} />
+      ) : (
+        <div className='LoadingScreen'>
+          {loadingBar ? (
+            <ClipLoader color="#36d7b7" loading={true} size={100} />
           ) : (
             <div>Enter Data</div>
           )}
-      </div>}
+        </div>
+      )}
     </div>
   );
 }
