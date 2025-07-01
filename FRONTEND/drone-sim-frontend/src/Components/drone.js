@@ -12,7 +12,7 @@ function Drone(props) {
   const [batteryPopupShowing, setBatteryPopupShowing] = useState(false)
   const batteryPrognosis = () => {
     console.log(batteryPopupShowing)
-      if(batteryPopupShowing === true){
+      if(batteryPopupShowing == true){
         setBatteryPopupShowing(false)
       }
       else{
