@@ -1,11 +1,14 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BatteryPrognosisPopup from './batteryPrognosisPopup'
+import DroneDataPopup from './droneDataPopup';
 import './drone.css'
+import dronedata from "./droneData.json"
 
 
 function Drone(props) {
 
+  const [popupShown, setPopupShown] = useState(false);
   const [batteryPopupShowing, setBatteryPopupShowing] = useState(false)
   const batteryPrognosis = () => {
     console.log(batteryPopupShowing)
@@ -16,6 +19,30 @@ function Drone(props) {
         setBatteryPopupShowing(true)
       }
   }
+
+
+  const [droneDataIndividual, setDroneDataIndividual] = useState([0,2,3])
+  const IndividualdroneData = () => {
+  const droneName = props.droneName;
+
+
+  if (droneName === "Wasp AE") {
+    setDroneDataIndividual(dronedata.find(d => d.name === "Wasp AE"));
+  } else if (droneName === "MQ-9 Reaper") {
+    setDroneDataIndividual(dronedata.find(d => d.name === "MQ-9 Reaper"));
+  } else if (droneName === "RQ-4 Global Hawk") {
+    setDroneDataIndividual(dronedata.find(d => d.name === "RQ-4 Global Hawk"));
+  } else if (droneName === "ScanEagle") {
+    setDroneDataIndividual(dronedata.find(d => d.name === "ScanEagle"));
+  } else {
+    setDroneDataIndividual(null);
+  }
+};
+
+useEffect( () => {
+  IndividualdroneData()
+
+},[props.droneName])
   return (
     <div className="droneContainer">
 
@@ -36,7 +63,7 @@ function Drone(props) {
                 className="wind-line"
                 style={{
                   top: `${5 + i * 8}%`,
-                  animationDelay: `${i * 0.4}s`,
+                  animationDelay: `-${i * 0.4}s`,
                 }}
               />
             ))}
@@ -56,8 +83,10 @@ function Drone(props) {
               >Battery Prognosis
             </button>
 
-            <button className='exportsButton'>Drone Data</button> {/*popup screen of drone data*/}
-            <button className='exportsButton'>Location Data</button> {/*popup screen of location data including name, coordinates, current weather, etc*/}
+            <button onClick={() => setPopupShown(true)}
+
+            className='exportsButton' >Drone Data</button> {/*popup screen of drone data*/}
+           
           </div>
 
           <div className='toggleDrones'>
@@ -72,6 +101,8 @@ function Drone(props) {
           onClose={() => setBatteryPopupShowing(false)} 
           
         />
+
+        <DroneDataPopup data ={droneDataIndividual}  shown={popupShown} onClose={() => setPopupShown(false)} />
     </div>
   );
 }

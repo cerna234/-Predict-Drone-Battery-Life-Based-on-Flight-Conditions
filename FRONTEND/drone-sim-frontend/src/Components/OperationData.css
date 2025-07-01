@@ -1,204 +1,242 @@
+/* ==================== IMPORTS ==================== */
+@import url('https://fonts.googleapis.com/css2?family=Stardos+Stencil&family=Black+Ops+One&family=Anton&family=Russo+One&family=Orbitron&display=swap');
+
+/* ==================== MAIN CONTAINER ==================== */
+.OperationDataContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
 
-.OperationDataContainer{
-
-
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-image: url("https://img.freepik.com/premium-vector/abstract-wireframe-terrain-vector-landscape-mountains-futuristic-polygonal-background-technology-perspective-grid-with-3d-landscape-retro-design_813854-25.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    letter-spacing: 1px;
-    
-
-
+background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 900px;
+  min-width: 900px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 2px;
 }
 
-.liveTime{
-    color: rgba(129, 129, 129, 0.884);
-    position: absolute;
-    right: 1vw;
-    bottom: 0;
+/* ==================== LIVE CLOCK ==================== */
+.liveTime {
+  color: rgba(129, 129, 129, 0.884);
+  position: absolute;
+  right: 1vw;
+  bottom: 0;
 }
 
-/* INPUTS STYLING */
-.InputsSection{
-    width: 25%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: left;
-
+/* ==================== INPUTS SECTION ==================== */
+.InputsSection {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
 }
 
-.inputsSectionHeader{
-    color: rgba(255, 255, 255, 0.932);
-    font-size: 20px;
-    text-align: left;
-    width: 80%;
- 
+.inputsSectionHeader {
+  color: rgba(255, 255, 255, 0.932);
+  font-size: 20px;
+  text-align: left;
+  width: 80%;
 }
 
-.inputsContainer{
-    width: 90%;
-    height: 76%;
-    background-color: rgba(56, 56, 56, 0.671);
-    box-shadow: 0 0 10px #00ff9d3a, inset 0 0 5px #00ff9d46;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: column;
+.inputsContainer {
+  width: 90%;
+  height: 76%;
+  background-color: rgba(56, 56, 56, 0.671);
+  box-shadow: 0 0 10px #00ff9d3a, inset 0 0 5px #00ff9d46;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
 }
 
-.inputsContainer input,select {
-     background: transparent;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    outline: none;
-    padding: 8px 4px;
-    font-size: 15px;
-    font-weight: bold;
-    transition: border-color 0.3s ease;
-    color: rgba(255, 255, 255, 0.5);
+.inputsContainer input,
+.inputsContainer select {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  padding: 8px 4px;
+  font-size: 15px;
+  font-weight: bold;
+  transition: border-color 0.3s ease;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-/* DRONE SECTION */
-.droneSection{
-    width: 70%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-   
-}
-.dronSectionSelection{
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    top: 25%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+/* ==================== DRONE SECTION ==================== */
+.droneSection {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.DroneSelectorSection{
-    
-    width: 40%;
-    height: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-   
+.dronSectionSelection {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 25%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 600px;
+  max-height: 700px;
 }
 
-
-.toggleDroneButtons{
-    position: relative;
-     width: 20%;
-     height: 10%;
-     top: 30%;
-     z-index: 100;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
+.DroneSelectorSection {
+  width: 40%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.toggleDroneButton{
-    background: rgba(0, 0, 0, 0); /* transparent but with some depth */
-    border: 2px solid #167902; /* neon cyan */
-    border-radius: 12px;
-    color: #04e229;
-    font-size: 20px;
-    padding: 5px 10px;
-    text-shadow: 0 0 5px #1de603, 0 0 10px #045a20;
-    font-family: 'Orbitron', sans-serif; /* futuristic font */
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 5px #00ffff33, 0 0 10px #00ffff22;
+.toggleDroneButtons {
+  position: relative;
+  width: 20%;
+  height: 10%;
+  top: 30%;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.toggleDroneButton {
+  background: rgba(0, 0, 0, 0);
+  border: 2px solid #167902;
+  border-radius: 12px;
+  color: #04e229;
+  font-size: 20px;
+  padding: 5px 10px;
+  text-shadow: 0 0 5px #1de603, 0 0 10px #045a20;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px #00ffff33, 0 0 10px #00ffff22;
+}
+
 .toggleDroneButton:hover {
-    background: #00ffff22;
-    box-shadow: 0 0 10px #00cc00, 0 0 20px #1d7701;
-    color: #ffffff;
+  background: #00ffff22;
+  box-shadow: 0 0 10px #00cc00, 0 0 20px #1d7701;
+  color: #ffffff;
 }
 
-.droneSelectorButtonImage{
-    width: 80px;
-    height: 90px;
-    opacity: 50%;
-  
-   
+.droneSelectorButtonImage {
+  width: 150px;
+  height: 150px;
+  opacity: 50%;
 }
 
-/* STATS SECTION */
-.StatsSection{
-    width: 30%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+/* ==================== STATS SECTION ==================== */
+.StatsSection {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.StatsSectionInner{
-    width: 90%;
-    height: 70%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}        
-
-
-/* MISSION STATS SECTION */
-.missionStatsBox{
-    
-    width: 90%;
-    height: 50%;
-     background-color: rgba(56, 56, 56, 0.671);
-    padding: 10px;
-       box-shadow: 0 0 10px #00ff9d3a, inset 0 0 5px #00ff9d46;
-   
+.StatsSectionInner {
+  width: 90%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.missionStatsHeader{
-    color: white;
-    font-size: 25px;
-
+/* ==================== MISSION STATS ==================== */
+.missionStatsBox {
+  width: 90%;
+  height: 45%;
+  background-color: rgba(56, 56, 56, 0.671);
+  padding: 20px;
+  box-shadow: 0 0 10px #00ff9d3a, inset 0 0 5px #00ff9d46;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
-.missionStat{
-    color: rgb(184, 184, 184);
-    font-size: 15px;
- 
+.missionStatsHeader {
+  color: white;
+  font-size: 20px;
+}
 
+.missionStat {
+  color: rgba(184, 184, 184, 0.719);
+  font-size: 10px;
 }
 
 .label {
-  color: white;
+  color: rgb(235, 234, 234);
   font-weight: bold;
-  margin-right: 6px; /* spacing between label and value */
+  margin-right: 6px;
+  text-shadow: 4px 4px 6px rgb(0, 0, 0);
+  letter-spacing: 4px;
 }
 
 .value {
-  color: #bbb; /* greyish color */
+  color: #bbbbbb8c;
   font-weight: normal;
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.425);
 }
 
-.toggleButton{
-    background: linear-gradient(145deg, #1c1c1c, #2d2d2d);
-  color: #00ff9f; /* Tactical neon green */
+/* ==================== BATTERY SECTION ==================== */
+.BatteryLifeExpectancyBox {
+  width: 90%;
+  height: 30%;
+  position: relative;
+  box-shadow: 0 0 10px #00ff9d3a, inset 0 0 5px #00ff9d46;
+  background-color: rgba(56, 56, 56, 0.671);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+}
+
+.BatteryLifeExpectancyBoxHeader {
+  color: white;
+  font-size: 20px;
+}
+
+.BatteryLifeExpectancyMinutesValue {
+  color: white;
+  font-size: 15px;
+}
+
+.BatteryLifeExpectancyBox {
+  width: 95%;
+  height: 40px;
+  background-color: rgba(37, 37, 37, 0.582);
+  border: 1px solid rgba(121, 121, 121, 0.308);
+  box-shadow: 2px 2px 5px 2px black;
+}
+
+.BatteryLifeExpectancyAmountDisplay {
+  height: 100%;
+  transition: 1s ease-in-out;
+}
+
+/* ==================== BUTTON SECTION ==================== */
+.ToggleButtonsSection {
+  height: 10%;
+  width: 90%;
+}
+
+.toggleButton {
+  background: linear-gradient(145deg, #1c1c1c, #2d2d2d);
+  color: #00ff9f;
   border: 2px solid #00ff9f;
-  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
   letter-spacing: 2px;
   padding: 10px 20px;
@@ -210,69 +248,21 @@
   background-clip: padding-box;
 }
 
-
-.BateryLifeExpectancyBox{
-    
-    width: 90%;
-    height: 30%;
-    position: relative;
-   box-shadow: 0 0 10px #00ff9d3a, inset 0 0 5px #00ff9d46;
-    background-color: rgba(56, 56, 56, 0.671);
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: space-evenly;
-    
-}
-.BatteryLifeExpectancyBoxHeader{
-    color: white;
-    font-size: 20px;
+/* ==================== DRONE STATS WRAPPER ==================== */
+.droneStatsContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.BatteryLifeExpectancyMinutesValue{
-    color: white;
-    font-size: 15px;
+/* ==================== LOADING SCREEN ==================== */
+.LoadingScreen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
-.BatteryLifeExpetancyBox{
-    width: 95%;
-    height: 40px;
-    background-color: rgba(37, 37, 37, 0.582);
-    border: 1px solid rgba(121, 121, 121, 0.308);
-    box-shadow: 2px 2px 5px 2px  black;
-}
-
-.BatteryLifeExpetancyAmountDisplay{
-
-    height: 100%;
-    transition: 1s ease-in-out;
-}
-
-.ToggleButtonsSection{
-   
-    height: 10%;
-    width: 90%;
-
-}
-
-
-.droneStatsContainer{
-
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-}
-.LoadingScreen{
-
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  
-}
-

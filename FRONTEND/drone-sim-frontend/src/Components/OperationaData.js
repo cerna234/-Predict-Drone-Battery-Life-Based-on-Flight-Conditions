@@ -164,11 +164,11 @@ const currentdate = new Date(
   const dates = [
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1 ),
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
+    
   ].map(d => d.toISOString().slice(0, 10));
 
   return (
-    <div className="OperationDataContainer">
+    <div style={{ backgroundImage: "url('/Images/drone-BackgroundImage.jpg')" }} className="OperationDataContainer">
       <h2 className="liveTime">{currentTime}</h2>
 
       <div className="InputsSection">

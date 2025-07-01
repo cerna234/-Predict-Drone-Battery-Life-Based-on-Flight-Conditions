@@ -3,7 +3,7 @@
 import LiveDataPage from './Pages/LiveDataPage';
 import SimulatedDataPage from './Pages/SimulatedDataPage';
 
-import './main.css'
+import './App.css'
 function App() {
   return (
     <div className="App">
