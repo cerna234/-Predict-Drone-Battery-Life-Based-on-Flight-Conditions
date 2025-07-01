@@ -1,5 +1,5 @@
 
-//import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BatteryPrognosisPopup from './batteryPrognosisPopup'
 import DroneDataPopup from './droneDataPopup';
 import './drone.css'
