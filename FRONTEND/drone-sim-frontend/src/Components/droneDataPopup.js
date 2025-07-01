@@ -3,9 +3,7 @@ import "./droneDataPopup.css"
 function DroneDataPopup({ shown, onClose, data }) {
   if (!shown) return null;
 
-  const handleDataClick = () => {
-    console.log(data)
-  };
+ 
 
   return (
 

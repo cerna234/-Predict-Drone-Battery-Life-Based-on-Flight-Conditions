@@ -1,7 +1,7 @@
 
 
 import LiveDataPage from './Pages/LiveDataPage';
-import SimulatedDataPage from './Pages/SimulatedDataPage';
+//import SimulatedDataPage from './Pages/SimulatedDataPage';
 
 import './App.css'
 function App() {

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from 'react';
 import BatteryPrognosisPopup from './batteryPrognosisPopup'
 import DroneDataPopup from './droneDataPopup';
 import './drone.css'
@@ -12,7 +12,7 @@ function Drone(props) {
   const [batteryPopupShowing, setBatteryPopupShowing] = useState(false)
   const batteryPrognosis = () => {
     console.log(batteryPopupShowing)
-      if(batteryPopupShowing == true){
+      if(batteryPopupShowing === true){
         setBatteryPopupShowing(false)
       }
       else{
