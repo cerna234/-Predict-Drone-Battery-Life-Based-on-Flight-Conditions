@@ -1,15 +1,6 @@
-# live_data/routes.py
+# Model_Prediction_Routes/prediction_routes.py
 from flask import Blueprint, request, jsonify
-from flask import abort
-from datetime import datetime
-import csv
-import json
-from joblib import load
-import requests
-import pandas as pd
-import io
 from Weather_helper_functions.weather_helper_functions import live_weather_data_helper
-import numpy as np
 import boto3
 import joblib
 import os
@@ -27,10 +18,15 @@ def load_model_from_s3(bucket_name, object_key):
     s3.download_file(bucket_name, object_key, local_path)
     return joblib.load(local_path)
 
-# Load the model once when the module loads
-model = load_model_from_s3("drone-predictor-model", "drone-battery-life-regression-pipeline.joblib")
+# Lazy load model variable
+model = None
 
-# Route will have live data with minimal input from user
+def get_model():
+    global model
+    if model is None:
+        model = load_model_from_s3("drone-predictor-model", "drone-battery-life-regression-pipeline.joblib")
+    return model
+
 @prediction_bp.route("/live_data_prediction", methods=['POST'])
 def live_prediction_data():
     input_data = request.get_json()
@@ -40,23 +36,16 @@ def live_prediction_data():
     payload = input_data.get("payload")
     altitude = input_data.get("altitude")
     enemy_contact = input_data.get("enemy_contact")
-
     location = input_data.get("Location")
     date = input_data.get("date")
     base_life = input_data.get("base_life")
 
     weather_Data = live_weather_data_helper(location, date)
 
-    print(weather_Data)
-
     predicted_data = []
     for hour in weather_Data:
-
         time = hour.get("time")
-        if hour.get("precip_in") > 0:
-            rain = 1
-        else:
-            rain = 0
+        rain = 1 if hour.get("precip_in") > 0 else 0
         time_of_day = int(hour.get("time").split(" ")[1].split(":")[0])
         temp_humidity = round(hour.get("feelslike_f") * hour.get("humidity"), 2)
         wind_rain = round(hour.get("wind_mph") * rain, 2)
@@ -65,7 +54,7 @@ def live_prediction_data():
             drone_type,
             hour.get("temp_f"),
             hour.get("wind_mph"),
-            rain,  # rain
+            rain,
             hour.get("humidity"),
             time_of_day,
             mission,
@@ -77,7 +66,9 @@ def live_prediction_data():
             wind_rain
         ]]
 
-        prediction = model.predict(prediction_data)
+        model_instance = get_model()
+        prediction = model_instance.predict(prediction_data)
+
         formatted_predicted_data = {
             "model_battery_life_length_prediction": round(float(prediction[0]), 2),
             "Hour_information": {
