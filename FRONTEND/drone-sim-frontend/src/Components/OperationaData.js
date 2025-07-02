@@ -91,7 +91,7 @@ const currentdate = new Date(
     console.log(formData)
     
     setLoadingBar(true)
-    fetch('http://127.0.0.1:5000/live_data_prediction', {
+    fetch('https://drone-battery-predictor-10a55fae9a09.herokuapp.com/live_data_prediction', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
