@@ -1,4 +1,4 @@
-# 🛰️ Real-Time Drone Battery Life Predictor
+![image](https://github.com/user-attachments/assets/39299179-6ccb-4a40-80ce-997d4beedb5f)# 🛰️ Real-Time Drone Battery Life Predictor
 
 **Author:** Miguel Cerna  
 **Live Demo:** [batterylifeplannerfordefensedrones.netlify.app](https://batterylifeplannerfordefensedrones.netlify.app)  
@@ -25,7 +25,6 @@ This application addresses the issue by forecasting UAV battery life using envir
 ## 3. System Architecture
 
 ### 🔧 Architecture Overview:
-
 
 
 ### 🔲 Components:
@@ -104,16 +103,7 @@ This application addresses the issue by forecasting UAV battery life using envir
 
 ---
 
-## 8. Results and Impact
-
-- ✅ Reduced mid-mission battery failures in simulations by 20%
-- ✅ Improved operator planning accuracy
-- ✅ Enabled faster decisions with color-coded visual indicators
-- ✅ Positioned as a tactical assistant for field command teams
-
----
-
-## 9. Future Work
+## 8. Future Work
 
 - 📡 Integrate real drone telemetry via Raspberry Pi or ESP32
 - ⏱️ Add LSTM-based time series model for sequence forecasting
@@ -123,11 +113,11 @@ This application addresses the issue by forecasting UAV battery life using envir
 
 ---
 
-## 10. Appendix
+## 9. Appendix
 
 ### 💻 System Screenshot
-> _Mission view showing predicted weather, selected drone (e.g., Wasp AE), forecast chart, and configuration panel._  
-> _📸 (Add image here when available)_
+
+![Uploading image.png…]()
 
 ---
 
@@ -141,13 +131,6 @@ This application addresses the issue by forecasting UAV battery life using envir
 | **Weather API**  | OpenWeatherMap One Call 3.0 |
 | **Frontend Stack**| React.js |
 | **Backend Stack**| Flask (Python) |
-
----
-
-## 📜 License
-
-This project is intended for educational, research, and defense-focused prototyping.  
-Please contact the author for licensing or collaboration.
 
 ---
 
