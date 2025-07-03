@@ -117,7 +117,7 @@ This application addresses the issue by forecasting UAV battery life using envir
 
 ### 💻 System Screenshot
 
-![Uploading image.png…]()
+![Drone Project Screenshot](./droneProjectImage.jpg)
 
 ---
 
