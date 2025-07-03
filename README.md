@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/39299179-6ccb-4a40-80ce-997d4beedb5f)# 🛰️ Real-Time Drone Battery Life Predictor
+
 
 **Author:** Miguel Cerna  
 **Live Demo:** [batterylifeplannerfordefensedrones.netlify.app](https://batterylifeplannerfordefensedrones.netlify.app)  
